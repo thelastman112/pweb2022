@@ -4,9 +4,10 @@
     <div class="container">
 
         <aside class="col">
-            <form action="{{ route('students.update', $student->id) }}" method="post">
+            <form action="{{ route('students.update') }}" method="post">
                 @csrf
                 @method('PUT')
+                <input type="hidden" name="id" value="{{ $student->id }}">
                 <div class="mb-3">
                     <label for="name" class="form-label">Nama</label>
                     <input type="text" class="form-control" name="name" id="name" aria-describedby="nameId"

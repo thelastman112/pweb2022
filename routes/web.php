@@ -20,4 +20,9 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::resource('/students', StudentController::class);
+// Route::resource('/students', StudentController::class);
+Route::get('/students',[StudentController::class, 'index'])->name('students.index');
+Route::get('/students/{id}',[StudentController::class, 'edit'])->name('students.edit');
+Route::post('/students',[StudentController::class, 'store'])->name('students.store');
+Route::put('/students',[StudentController::class, 'update'])->name('students.update');
+Route::delete('/students/{id}',[StudentController::class, 'destroy'])->name('students.destroy');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Student;
+use Illuminate\Http\request;
 
 class StudentController extends Controller
 {
@@ -37,8 +38,27 @@ class StudentController extends Controller
      */
     public function store(StoreStudentRequest $request)
     {
-        $student = Student::create($request->all());
-        return redirect()->route('students.index')->with('success', 'Data berhasil ditambahkan');
+        // dd($request); (dd is dump and die for diagnostic)
+        // $student = Student::create($request->all());
+        $student = Student::create([
+            'name' => $request->name,
+            'nim' => $request->nim,
+            'address' => $request->address,
+            'phone' => $request->phone,
+            'birth_date' => $request->birth_date,
+        ]);
+        $student = Student::where([
+            'name' => $request->name,
+            'nim' => $request->nim,
+            'address' => $request->address,
+            'phone' => $request->phone,
+            'birth_date' => $request->birth_date,
+        ])->first();
+            // (each key must be same as column name)
+        return response()->json([
+            'success' => true,
+            'data' => $student,
+        ]);
     }
 
     /**
@@ -58,11 +78,16 @@ class StudentController extends Controller
      * @param  \App\Models\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function edit(Student $student)
+    // public function edit(Student $student)
+    // {
+    //     return view('students.edit', compact('student'));
+    // } (without making student from id)
+
+    public function edit($id)
     {
+        $student = Student::findOrFail($id);
         return view('students.edit', compact('student'));
     }
-
     /**
      * Update the specified resource in storage.
      *
@@ -70,16 +95,14 @@ class StudentController extends Controller
      * @param  \App\Models\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateStudentRequest $request, Student $student)
+    public function update(UpdateStudentRequest $request)
     {
-        $student->name = $request->name;
-        $student->nim = $request->nim;
-        $student->address = $request->address;
-        $student->phone = $request->phone;
-        $student->birth_date = $request->birth_date;
-        $student->save();
-        return redirect()->route('students.index')->with('success', 'Data berhasil diubah');
+        $student = Student::findOrFail($request->id);
+        // dd($request);
+        $student->update($request->all());
+        return redirect ('/students');
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -87,9 +110,13 @@ class StudentController extends Controller
      * @param  \App\Models\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Student $student)
+    public function destroy($id)
     {
+        $student = Student::findOrFail($id);
         $student->delete();
-        return redirect()->route('students.index')->with('success', 'Data berhasil dihapus');
+        return response()->json([
+            'success' => true,
+        ]);
+
     }
 }

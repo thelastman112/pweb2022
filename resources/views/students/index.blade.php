@@ -1,6 +1,7 @@
 @extends('layouts.app')
-
 @section('content')
+
+
 <div class="container">
     <h1>Halaman Student</h1>
     <section class="row">
@@ -9,7 +10,7 @@
             Student Add Data
         </button>
 
-        <!-- Modal -->
+        <!-- Modal add -->
         <div class="modal fade" id="studentadd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -20,6 +21,54 @@
                         </button>
                     </div>
                     <form action="" id="add">
+                        <div class="modal-body">
+                            @csrf
+                            {{-- name --}}
+                            <div>
+                                <label> Nama </label>
+                                <input type="text" class="form-control" name="name" placeholder="enter name">
+                            </div>
+                            {{-- nim --}}
+                            <div>
+                                <label> NIM </label>
+                                <input type="text" class="form-control" name="nim" placeholder="enter nim">
+                            </div>
+                            {{-- address --}}
+                            <div>
+                                <label> Alamat </label>
+                                <textarea class="form-control" name="address" placeholder="enter address"></textarea>
+                            </div>
+                            {{-- phone --}}
+                            <div>
+                                <label> Phone </label>
+                                <input type="text" class="form-control" name="phone" placeholder="enter phone">
+                            </div>
+                            {{-- birthdate --}}
+                            <div>
+                                <label> Birthdate </label>
+                                <input type="date" class="form-control" name="birth_date" placeholder="enter birthdate">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save Student Data</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal edit/update -->
+        <div class="modal fade" id="studentedit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="" id="edit">
                         <div class="modal-body">
                             @csrf
                             {{-- name --}}
@@ -99,7 +148,13 @@
                                     document.getElementById('add').reset();
                                     //reset modal
                                     $('#studentadd').modal('hide');
-                                    alert('Data berhasil ditambahkan');
+                                    Swal.fire ({
+                                        icon : 'success',
+                                        title : 'Data Berhasil Ditambahkan',
+                                        text : 'Data Berhasil Ditambahkan',
+                                        showConfirmButton : false,
+                                        timer: 1050
+                                    })
                                     $('#studentadd .close').click();
                                 },
                                 error: function(error){
@@ -126,7 +181,12 @@
                             $(e.target) .closest('tr') .remove();
                             console.log($(this));
                             $('#student' + id).remove();
-                            // alert('Data berhasil dihapus');
+                        Swal.fire({
+                            icon : 'success',
+                            title : 'Data Berhasil Dihapus',
+                            showConfirmButton : false,
+                            timer : 1050
+                        });
                         },
 
                         error: function(error){
@@ -137,6 +197,7 @@
 
                 });
             });
+            //ajax for edit
         });
             </script>
 
@@ -165,6 +226,7 @@
                             <td>{{ $student->phone }}</td>
                             <td>{{ $student->birth_date }}</td>
                             <td>
+
                                 <a href="{{ route('students.edit', $student->id) }}" class="btn btn-warning">Edit</a>
                                 <button class="btn btn-danger" data-id="{{ $student->id }}" id="delete"> Delete </button>
                             </td>

@@ -17,6 +17,9 @@ class StudentController extends Controller
     public function index()
     {
         $students = Student::orderBy('id', 'desc')->get();
+
+
+
         return view('students.index', compact('students'));
     }
 
@@ -100,7 +103,10 @@ class StudentController extends Controller
         $student = Student::findOrFail($request->id);
         // dd($request);
         $student->update($request->all());
-        return redirect ('/students');
+        return response()->json([
+            'success' => true,
+            'data' => $student,
+        ]);
     }
 
 

@@ -9,6 +9,12 @@ class Student extends Model
 {
     use HasFactory;
 
+    //paginate
+    public function scopePaginate($query, $perPage = 10)
+    {
+        return $query->orderBy('id', 'desc')->paginate($perPage);
+    }
+
     protected $table = 'students';
 
     protected $fillable = [
